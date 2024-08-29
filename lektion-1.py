@@ -1,4 +1,4 @@
-Name = input("Write yo name")
+Name = input("Write yo name:  ")
 
 print(Name)
 
