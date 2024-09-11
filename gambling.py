@@ -1,6 +1,32 @@
 print("Välkommen till tärnings spelet!!!!")
 input("\nInput enter för att börja  ")
 
+
+def repeatUntilInt(max,min,msg):
+    while True:
+        nummer = input(f"\t{msg}")
+
+        if nummer:
+            if nummer.isdigit():
+                if int(nummer) > max or int(nummer) < min:
+                    print(f"Ditt tal är inte gilltigt! Skriv ett tal mellan {min}-{max}!")
+                else:
+                    return int(nummer)
+            else:
+                print(f"ERROR: snälla skriv ett tal! (tal mellan {min}-{max})")
+        else:
+            print(f"ERROR: snälla skriv ett tal! (tal mellan {min}-{max})")
+        
+        
+           
+
+
+
+print("\nVill du spela med en fysisk tärning eller en digital tärning?")
+print("Skriv '1' för fysiskt,    eller '2' för digital")
+modeType = repeatUntilInt(2,1,"Välj Mode: ")
+
+
 from random import randint
 
 runda = 1
@@ -11,22 +37,6 @@ datorPoäng = 0
 spelarePoäng = 0
 
 
-#In progress function
-def repeatUntilInt():
-    while True:
-        nummer = input("\tSkriv numret du fick: ")
-
-        if nummer:
-            if nummer.isdigit == True:
-                return int(nummer)
-            else:
-                print("ERROR: snälla skriv in det nummer du fick på din tärning (tal mellan 1-6)")
-        else:
-            print("ERROR: snälla skriv in det nummer du fick på din tärning (tal mellan 1-6)")
-
-
-
-
 
 
 while gameOver == False:
@@ -34,10 +44,14 @@ while gameOver == False:
     if runda == 1:
         #S kriver ut regler för första rundan
         print("\n------------Regler-------------")
-        print("\nVarje runda ska du slå en fysisk tärning, sedan skriver du ner vilket nummer du fick")
+        if modeType == 1:
+            print("\nVarje runda ska du slå en fysisk tärning, sedan skriver du ner vilket nummer du fick")
+        else:
+             print("\nVarje runda kan du slå en digital tärning genom att trycka enter")
         print("Efter det så kommer datorn slå sin tärning, den som får högst nummer är den som får poäng")
         print("Först till 5 poäng vinner, lycka till!")
         print("\n-------------------------------------------")
+        
 
     # Skriver ut vilken runda det är och hur många poäng varje sida har
     print(f"\nRunda {runda}!")
@@ -46,9 +60,11 @@ while gameOver == False:
     # spelaren skriver vilket nummer den fick när den slog sin tärning
     print("\nSlå din tärning...")
 
-    #spelareNum = repeatUntilInt()
-    spelareNum = input("\tSkriv numret du fick: ")
-    spelareNum = int(spelareNum)
+    if modeType == 1:
+        spelareNum = repeatUntilInt(6,1,"Skriv talet du fick: ")
+    else:
+        input("Input enter för att slå tärningen: ")
+        spelareNum = randint(1,6)
 
     # Datorn slår sin tärning
     datorNum = randint(1,6)
@@ -80,6 +96,7 @@ while gameOver == False:
 print("\nGAME OVER")
 print("\n-------------------------------------------")
 print(f"\n\t{vinnare} Vann hela spelet!!!")
+print(f"\tSpelare:{spelarePoäng} - Dator:{datorPoäng}")
 print("\n-------------------------------------------")
 
 
