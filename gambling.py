@@ -2,6 +2,7 @@ print("Välkommen till tärnings spelet!!!!")
 input("\nInput enter för att börja  ")
 
 
+
 def repeatUntilInt(max,min,msg):
     while True:
         nummer = input(f"\t{msg}")
@@ -18,12 +19,11 @@ def repeatUntilInt(max,min,msg):
             print(f"ERROR: snälla skriv ett tal! (tal mellan {min}-{max})")
         
         
-           
-
-
 
 print("\nVill du spela med en fysisk tärning eller en digital tärning?")
 print("Skriv '1' för fysiskt,    eller '2' för digital")
+
+
 modeType = repeatUntilInt(2,1,"Välj Mode: ")
 
 
