@@ -21,14 +21,35 @@
 # Cool visuals :)
 
 from random import randint
+from time import sleep
 
 print("Let the games commence!")
 
 playerLife = 3
 dealerLife = 3
 
+
+
+
+
+
+
+
 currentMatch = False
 
+#Randomizes the positions of all values within a list
+def ShuffleList(List):
+     shuffledList = []
+     for i in range(len(List)):
+         index = randint(0,len(List))
+
+         listValue = List[index]
+         List.pop(index)
+
+         shuffledList.append(listValue)
+     return shuffledList
+     
+     
 
 #shuffledRounds = []
 
@@ -38,18 +59,17 @@ blankRoundQouta = 2
 
 gunHolder = "player"
 
+actionChosen = 0
+actionList = ["Shoot Dealer","Shoot Yourself","PlaceHolderAction"]
+
 while dealerLife > 0 and playerLife > 0:
     roundsList = []
-    shuffledRounds = []
 
-    while currentMatch:
-         if gunHolder == "player":
-              print("yippie!")
     
     #Set up for the rounds being inserted
     roundCount = randint(3,5)
 
-
+    #Adds all rounds into a list and makes sure that the qoutas are met
     for i in range(roundCount):
          roundType = randint(1,2)
          actualRound = NotImplemented
@@ -78,23 +98,71 @@ while dealerLife > 0 and playerLife > 0:
     blankCount = roundsList.count("o")
 
     print(f"{liveCount} Live rounds, {blankCount} Blanks")
+
+    sleep(1)
     print("They are inserted in a random order")
 
+
     print(f"Unshuffled List: {roundsList}")
+    sleep(2)
 
-    for i in range(len(roundsList)):
-         indexShuffle = i-1
-         index = randint(0,len(roundsList)-1)
-
-         Round = roundsList[index]
-         roundsList.pop(index)
-
-         shuffledRounds.append(Round)
+    roundsList = ShuffleList(roundsList)
     
-    print(f"Shuffled List: {shuffledRounds}")
+    print(f"Shuffled List: {roundsList}")
+
+    currentMatch = True
 
 
-    yeild = input("stopcode")
+    while currentMatch:
+         if gunHolder == "player":
+              print("Your turn")
+              
+
+              ShowCaseList = []
+
+              for action in actionList:
+                   if actionList.index(action) == actionChosen:
+                         ShowCaseList.append(f"[{action}]")
+                   else:
+                         ShowCaseList.append(action)
+
+              print(*ShowCaseList,sep="   ")
+
+              playerAction = input("")
+              playerAction = playerAction.upper()
+
+              if playerAction == "A":
+                   actionChosen -= 1
+                   if actionChosen < 0:
+                        actionChosen = len(actionList)-1
+              elif playerAction == "D":
+                   actionChosen += 1
+                   if actionChosen > len(actionList)-1:
+                        actionChosen = 0
+              elif playerAction == "":
+                   finalChoice = actionList[actionChosen]
+
+                   target = NotImplemented
+
+                   if finalChoice == "Shoot Yourself":
+                        target = "player"
+                   
+                   if finalChoice == "Shoot Yourself":
+                        print("You hold the gun to your chin...")
+                        sleep(3)
+                        activatedRound = roundsList[0]
+                        roundsList.pop(0)
+
+                        if activatedRound == "x":
+                             print("BANG!!")
+                             playerLife -= 1
+                             sleep(1)
+                             print("You lose a life")
+                             currentMatch = False
+                        else:
+                             print("*click*")
+                             sleep(1)
+                             print("It was a blank...")
 
 
 
