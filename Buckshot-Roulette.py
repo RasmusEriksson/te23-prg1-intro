@@ -41,7 +41,7 @@ currentMatch = False
 def ShuffleList(List):
      shuffledList = []
      for i in range(len(List)):
-         index = randint(0,len(List))
+         index = randint(0,len(List)-1)
 
          listValue = List[index]
          List.pop(index)
@@ -49,7 +49,38 @@ def ShuffleList(List):
          shuffledList.append(listValue)
      return shuffledList
      
-     
+def RenderRoom(gunholder,aim,message):
+     playerTurn = " "
+     dealerTurn = " "
+
+     playerAim = "     "
+     dealerAim = "     "
+
+     playerHandle = "   _"
+     dealerHandle = " "
+
+     if gunHolder == "player":
+          playerTurn = "V"
+          if aim == "Other":
+               playerAim =   "  ___"
+               playerHandle = "/. _"
+     else:
+          dealerTurn = "V"
+          if aim == "Other":
+               dealerAim =   "___  "
+               playerHandle = "_  .\\"
+          elif aim == "Self":
+               dealerAim = " ___"
+
+
+     print(f"-----------------------------------")
+     print(f"\t{message}")
+     print(f"-----V----------------------V------")
+     print(f"     O ___              ___ O      ")
+     print(f"    /I\  .\____________/.  /I\     ")
+     print(f"     M     I         I      M      ")
+     print(f"    d b    I         I     d b     ")
+     print(f"-----------------------------------")
 
 #shuffledRounds = []
 
@@ -61,6 +92,10 @@ gunHolder = "player"
 
 actionChosen = 0
 actionList = ["Shoot Dealer","Shoot Yourself","PlaceHolderAction"]
+
+dealerMemory = []
+
+
 
 while dealerLife > 0 and playerLife > 0:
     roundsList = []
@@ -107,6 +142,8 @@ while dealerLife > 0 and playerLife > 0:
     sleep(2)
 
     roundsList = ShuffleList(roundsList)
+
+    dealerMemory = roundsList
     
     print(f"Shuffled List: {roundsList}")
 
@@ -146,23 +183,120 @@ while dealerLife > 0 and playerLife > 0:
 
                    if finalChoice == "Shoot Yourself":
                         target = "player"
+                   elif finalChoice == "Shoot Dealer":
+                        target = "dealer"
                    
-                   if finalChoice == "Shoot Yourself":
-                        print("You hold the gun to your chin...")
-                        sleep(3)
-                        activatedRound = roundsList[0]
-                        roundsList.pop(0)
+                   if target != NotImplemented:
+                         activatedRound = roundsList[0]
+                         roundsList.pop(0)
+                         #dealerMemory.pop(0)
+                         if target == "player":
+                             print("\nYou hold the gun to your chin...")
+                             sleep(3)
+                            
 
-                        if activatedRound == "x":
-                             print("BANG!!")
-                             playerLife -= 1
-                             sleep(1)
-                             print("You lose a life")
-                             currentMatch = False
-                        else:
-                             print("*click*")
-                             sleep(1)
-                             print("It was a blank...")
+                             if activatedRound == "x":
+                                   print("BANG!!")
+                                   playerLife -= 1
+                                   sleep(1)
+                                   print("You lose a life")
+                                   currentMatch = False
+                             else:
+                                   print("*click*")
+                                   sleep(1)
+                                   print("It was a blank...")
+
+                         elif target == "dealer":
+                             
+                             print("\nYou aim the gun at the dealer...")
+                             sleep(3)
+
+                             if activatedRound == "x":
+                                   print("BANG!!")
+                                   dealerLife -= 1
+                                   sleep(1)
+                                   print("The Dealer loses a life")
+                                   currentMatch = False
+                             else:
+                                   print("*click*")
+                                   sleep(1)
+                                   print("It was a blank...")
+                             gunHolder = "dealer"
+         elif gunHolder == "dealer":
+              """
+              liveRange = [1,dealerMemory.count("x")]
+              blankRange = [dealerMemory.count("x")+1,len(dealerMemory)]
+
+              memorySize = len(dealerMemory)
+              """
+              liveRange = [1,roundsList.count("x")]
+              blankRange = [roundsList.count("x")+1,len(roundsList)]
+
+              memorySize = len(roundsList)
+
+              if memorySize > 1:
+                    dealerChoice = randint(1,memorySize)
+              else:
+                    dealerChoice = 1
+                   
+
+             
+              target = NotImplemented
+
+
+              if dealerChoice >= liveRange[0] and dealerChoice <= liveRange[1]:
+                   target = "player"
+              elif dealerChoice >= blankRange[0] and dealerChoice <= blankRange[1]:
+                   target = "dealer"
+               
+              activatedRound = roundsList[0]
+              roundsList.pop(0)
+              #dealerMemory.pop(0)
+
+
+              if target == "player":
+                    print("\nThe dealer aims the gun at you...")
+                    sleep(3)
+                            
+
+                    if activatedRound == "x":
+                         print("BANG!!")
+                         playerLife -= 1
+                         sleep(1)
+                         print("You lose a life")
+                         currentMatch = False
+                    else:
+                         print("*click*")
+                         sleep(1)
+                         print("It was a blank...")
+                    gunHolder = "player"
+
+              elif target == "dealer":
+                             
+                    print("\nThe dealer aims the gun at themselves...")
+                    sleep(3)
+
+                    if activatedRound == "x":
+                         print("BANG!!")
+                         dealerLife -= 1
+                         sleep(1)
+                         print("The Dealer loses a life")
+                         currentMatch = False
+                    else:
+                         print("*click*")
+                         sleep(1)
+                         print("It was a blank...")
+ 
+                   
+print("Game Over")
+              
+              
+                             
+                             
+                              
+                             
+                        
+                        
 
 
 
