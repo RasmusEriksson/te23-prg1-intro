@@ -23,7 +23,7 @@
 from random import randint
 from time import sleep
 
-print("Let the games commence!")
+
 
 playerLife = 3
 dealerLife = 3
@@ -33,7 +33,7 @@ dealerLife = 3
 
 
 
-
+instruction = ""
 
 currentMatch = False
 
@@ -49,38 +49,46 @@ def ShuffleList(List):
          shuffledList.append(listValue)
      return shuffledList
      
-def RenderRoom(gunholder,aim,message):
+def RenderRoom(gh,aim,message):
      playerTurn = " "
      dealerTurn = " "
+
 
      playerAim = "     "
      dealerAim = "     "
 
      playerHandle = "   _"
-     dealerHandle = " "
+     dealerHandle = "_    "
 
-     if gunHolder == "player":
+     if gh == "player":
           playerTurn = "V"
           if aim == "Other":
                playerAim =   "  ___"
                playerHandle = "/. _"
+          if aim == "Self":
+               playerAim =    "___  "
+               playerHandle = "  .\\"
      else:
           dealerTurn = "V"
           if aim == "Other":
-               dealerAim =   "___  "
-               playerHandle = "_  .\\"
+               dealerAim =    "___  "
+               dealerHandle = "_  .\\"
           elif aim == "Self":
-               dealerAim = " ___"
-
-
+               dealerAim =   "  ___"
+               dealerHandle = "/.   "
+     print("\n")
+     print(f"You: {playerLife}    Dealer: {dealerLife}")
      print(f"-----------------------------------")
-     print(f"\t{message}")
-     print(f"-----V----------------------V------")
-     print(f"     O ___              ___ O      ")
-     print(f"    /I\  .\____________/.  /I\     ")
+     print(f"\n{message}")
+     print(f"\n---- {playerTurn} -------------------- {dealerTurn} -----")
+     print(f"")
+     print(f"     O {playerAim}          {dealerAim} O      ")
+     print(f"    /I\\{playerHandle}___________{dealerHandle}/I\\     ")
      print(f"     M     I         I      M      ")
      print(f"    d b    I         I     d b     ")
      print(f"-----------------------------------")
+     print(f"{instruction}")
+     print(f"")
 
 #shuffledRounds = []
 
@@ -90,11 +98,15 @@ blankRoundQouta = 2
 
 gunHolder = "player"
 
+#RenderRoom(gunHolder,NotImplemented,"")
+
 actionChosen = 0
 actionList = ["Shoot Dealer","Shoot Yourself","PlaceHolderAction"]
 
 dealerMemory = []
 
+RenderRoom(gunHolder,NotImplemented,"Lets play a little game...")
+sleep(3)
 
 
 while dealerLife > 0 and playerLife > 0:
@@ -132,30 +144,38 @@ while dealerLife > 0 and playerLife > 0:
     liveCount = roundsList.count("x")
     blankCount = roundsList.count("o")
 
+
+
+
     print(f"{liveCount} Live rounds, {blankCount} Blanks")
 
-    sleep(1)
-    print("They are inserted in a random order")
+    statement = f"{liveCount} Live rounds, {blankCount} Blanks"
 
+    RenderRoom("Dealer","Other",statement)
+    sleep(4)
 
-    print(f"Unshuffled List: {roundsList}")
-    sleep(2)
+    RenderRoom("Dealer","Other","They are inserted in a random order.")
+    sleep(3)
+
 
     roundsList = ShuffleList(roundsList)
 
     dealerMemory = roundsList
-    
-    print(f"Shuffled List: {roundsList}")
 
     currentMatch = True
+    first = False
 
 
     while currentMatch:
          if gunHolder == "player":
-              print("Your turn")
               
+              if first == False:
+                   first = True
+                   RenderRoom(gunHolder,NotImplemented,"Your Turn")
+                   sleep(2)
 
               ShowCaseList = []
+
 
               for action in actionList:
                    if actionList.index(action) == actionChosen:
@@ -163,7 +183,19 @@ while dealerLife > 0 and playerLife > 0:
                    else:
                          ShowCaseList.append(action)
 
-              print(*ShowCaseList,sep="   ")
+              print(ShowCaseList)
+              print(*ShowCaseList ,sep="   ")
+
+
+              statement = "  ".join(ShowCaseList)
+
+              instruction = "use [A] and [D] to switch options, hit [ENTER] to choose"
+
+              RenderRoom(gunHolder,NotImplemented,statement)
+
+              instruction = ""
+
+              #print(*ShowCaseList,sep="   ")
 
               playerAction = input("")
               playerAction = playerAction.upper()
@@ -191,7 +223,8 @@ while dealerLife > 0 and playerLife > 0:
                          roundsList.pop(0)
                          #dealerMemory.pop(0)
                          if target == "player":
-                             print("\nYou hold the gun to your chin...")
+                             RenderRoom(gunHolder,"Self","You hold the gun to your chin...")
+                             #print("\nYou hold the gun to your chin...")
                              sleep(3)
                             
 
@@ -207,8 +240,8 @@ while dealerLife > 0 and playerLife > 0:
                                    print("It was a blank...")
 
                          elif target == "dealer":
-                             
-                             print("\nYou aim the gun at the dealer...")
+                             RenderRoom(gunHolder,"Other","You aim the gun at the dealer...")
+                             #print("\nYou aim the gun at the dealer...")
                              sleep(3)
 
                              if activatedRound == "x":
@@ -229,6 +262,11 @@ while dealerLife > 0 and playerLife > 0:
 
               memorySize = len(dealerMemory)
               """
+
+              RenderRoom(gunHolder,NotImplemented,"My Turn")
+
+              sleep(3.5)
+
               liveRange = [1,roundsList.count("x")]
               blankRange = [roundsList.count("x")+1,len(roundsList)]
 
@@ -255,7 +293,8 @@ while dealerLife > 0 and playerLife > 0:
 
 
               if target == "player":
-                    print("\nThe dealer aims the gun at you...")
+                    RenderRoom(gunHolder,"Other","The dealer aims the gun at you...")
+                    #print("\nThe dealer aims the gun at you...")
                     sleep(3)
                             
 
@@ -272,8 +311,9 @@ while dealerLife > 0 and playerLife > 0:
                     gunHolder = "player"
 
               elif target == "dealer":
-                             
-                    print("\nThe dealer aims the gun at themselves...")
+                    RenderRoom(gunHolder,"Self","The dealer aims the gun at themselves...")
+                    
+                    #print("\nThe dealer aims the gun at themselves...")
                     sleep(3)
 
                     if activatedRound == "x":
@@ -286,6 +326,8 @@ while dealerLife > 0 and playerLife > 0:
                          print("*click*")
                          sleep(1)
                          print("It was a blank...")
+    RenderRoom(gunHolder,NotImplemented,"Lets run that back again...")
+    sleep(3)
  
                    
 print("Game Over")
