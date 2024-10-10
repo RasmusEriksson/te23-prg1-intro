@@ -1,6 +1,6 @@
 #Rules:
 
-#The round starts with being shown 3-5 shells which will be randomly Live or Blank (atleast 1 blanks and atleast 1 live)
+#The round starts with being shown 3-5 shells which will be randomly Live or Blank (atleast 2 blanks and atleast 1 live)
 #The rounds are put into a list in a random order
 #You start first
 #You can choose to either shoot yourself or the dealer
@@ -50,8 +50,9 @@ def ShuffleList(List):
      return shuffledList
      
 def RenderRoom(gh,aim,message):
-     playerTurn = " "
-     dealerTurn = " "
+
+     playerTurn = "---"
+     dealerTurn = "---"
 
 
      playerAim = "     "
@@ -61,7 +62,7 @@ def RenderRoom(gh,aim,message):
      dealerHandle = "_    "
 
      if gh == "player":
-          playerTurn = "V"
+          playerTurn = " V "
           if aim == "Other":
                playerAim =   "  ___"
                playerHandle = "/. _"
@@ -69,7 +70,7 @@ def RenderRoom(gh,aim,message):
                playerAim =    "___  "
                playerHandle = "  .\\"
      else:
-          dealerTurn = "V"
+          dealerTurn = " V "
           if aim == "Other":
                dealerAim =    "___  "
                dealerHandle = "_  .\\"
@@ -80,7 +81,7 @@ def RenderRoom(gh,aim,message):
      print(f"You: {playerLife}    Dealer: {dealerLife}")
      print(f"-----------------------------------")
      print(f"\n{message}")
-     print(f"\n---- {playerTurn} -------------------- {dealerTurn} -----")
+     print(f"\n----{playerTurn}--------------------{dealerTurn}-----")
      print(f"")
      print(f"     O {playerAim}          {dealerAim} O      ")
      print(f"    /I\\{playerHandle}___________{dealerHandle}/I\\     ")
@@ -90,6 +91,49 @@ def RenderRoom(gh,aim,message):
      print(f"{instruction}")
      print(f"")
 
+def RenderShells(roundsL,roundsB,Message):
+
+     shellTop =          " ___ "
+     ShellSegmentTop =   "!___!"
+     shellSegmentLive =  "! X !"
+     shellSegmentBlank = "!   !"
+     shellBottom =       "!___!"
+
+     visualShellsListTOP = []
+     visualShellsListTOP2 = []
+     visualShellsList = []
+     visualShellsListBOT = []
+
+     totalRounds = roundsL + roundsB
+
+     for i in range(totalRounds):
+          visualShellsListTOP.append(shellTop)
+          visualShellsListTOP2.append(ShellSegmentTop)
+          visualShellsListBOT.append(shellBottom)
+
+          if i <= roundsL-1:
+               visualShellsList.append(shellSegmentLive)
+          else:
+               visualShellsList.append(shellSegmentBlank)
+               
+
+
+
+     print("\n")
+     print(f"You: {playerLife}    Dealer: {dealerLife}")
+     print(f"-----------------------------------")
+     print(f"\n{Message}")
+     print(f"\n-----------------------------------")
+     print(*visualShellsListTOP,sep="  ")
+     print(*visualShellsListTOP2,sep="  ")
+     print(*visualShellsList,sep="  ")
+     print(*visualShellsList,sep="  ")
+     print(*visualShellsListBOT,sep="  ")
+     print(f"-----------------------------------")
+     print(f"{instruction}")
+     print(f"")
+
+     
 #shuffledRounds = []
 
 liveRoundQouta = 1
@@ -105,7 +149,7 @@ actionList = ["Shoot Dealer","Shoot Yourself","PlaceHolderAction"]
 
 dealerMemory = []
 
-RenderRoom(gunHolder,NotImplemented,"Lets play a little game...")
+RenderRoom(NotImplemented,NotImplemented,"Lets play a little game...")
 sleep(3)
 
 
@@ -115,6 +159,7 @@ while dealerLife > 0 and playerLife > 0:
     
     #Set up for the rounds being inserted
     roundCount = randint(3,5)
+
 
     #Adds all rounds into a list and makes sure that the qoutas are met
     for i in range(roundCount):
@@ -147,23 +192,31 @@ while dealerLife > 0 and playerLife > 0:
 
 
 
-    print(f"{liveCount} Live rounds, {blankCount} Blanks")
-
     statement = f"{liveCount} Live rounds, {blankCount} Blanks"
 
-    RenderRoom("Dealer","Other",statement)
-    sleep(4)
+    instruction = "*remember these*"
+
+    #Shows all of the shells with the render shell function with the instruction "*remember these*"
+
+    RenderShells(liveCount,blankCount,statement)
+    sleep(5)
+
+    instruction = ""
 
     RenderRoom("Dealer","Other","They are inserted in a random order.")
     sleep(3)
 
 
+    
+
+    #shuffles the list to add to the randomization
     roundsList = ShuffleList(roundsList)
 
-    dealerMemory = roundsList
+
 
     currentMatch = True
     first = False
+    first2 = False
 
 
     while currentMatch:
@@ -174,6 +227,10 @@ while dealerLife > 0 and playerLife > 0:
                    RenderRoom(gunHolder,NotImplemented,"Your Turn")
                    sleep(2)
 
+
+              #Create a showcase list of the actions and puts squarebrackets around the choosen action to later print it
+              #does this by checking which index the actionChosen variable is assigned to and 
+              # appends the showCaseList with it if they share index
               ShowCaseList = []
 
 
@@ -186,6 +243,7 @@ while dealerLife > 0 and playerLife > 0:
               print(ShowCaseList)
               print(*ShowCaseList ,sep="   ")
 
+              #Creates a nicer looking string that can be printed in the renderroom function
 
               statement = "  ".join(ShowCaseList)
 
@@ -195,10 +253,12 @@ while dealerLife > 0 and playerLife > 0:
 
               instruction = ""
 
-              #print(*ShowCaseList,sep="   ")
 
               playerAction = input("")
               playerAction = playerAction.upper()
+
+              #Allows the player to lower or higher the value of the actionChosen variable to switch options, 
+              # goes around in circles if value is outside of the length of the list
 
               if playerAction == "A":
                    actionChosen -= 1
@@ -209,6 +269,8 @@ while dealerLife > 0 and playerLife > 0:
                    if actionChosen > len(actionList)-1:
                         actionChosen = 0
               elif playerAction == "":
+                   
+                   #Assigns the finalChoice variable to the value in the actionList which has the same index as actionChosen
                    finalChoice = actionList[actionChosen]
 
                    target = NotImplemented
@@ -218,13 +280,16 @@ while dealerLife > 0 and playerLife > 0:
                    elif finalChoice == "Shoot Dealer":
                         target = "dealer"
                    
+                   #Checks if there is a target for consistency reasons and for if you pick the PlaceHolderAction
                    if target != NotImplemented:
                          activatedRound = roundsList[0]
                          roundsList.pop(0)
-                         #dealerMemory.pop(0)
+
+                         #Checks who is the target when it's your turn and does the appropriet logic,
+                         #resets the current match if a player has lost a life
+
                          if target == "player":
                              RenderRoom(gunHolder,"Self","You hold the gun to your chin...")
-                             #print("\nYou hold the gun to your chin...")
                              sleep(3)
                             
 
@@ -233,11 +298,13 @@ while dealerLife > 0 and playerLife > 0:
                                    playerLife -= 1
                                    sleep(1)
                                    print("You lose a life")
+                                   sleep(1.5)
                                    currentMatch = False
                              else:
                                    print("*click*")
                                    sleep(1)
                                    print("It was a blank...")
+                                   sleep(1.5)
 
                          elif target == "dealer":
                              RenderRoom(gunHolder,"Other","You aim the gun at the dealer...")
@@ -249,23 +316,33 @@ while dealerLife > 0 and playerLife > 0:
                                    dealerLife -= 1
                                    sleep(1)
                                    print("The Dealer loses a life")
+                                   sleep(1.5)
                                    currentMatch = False
                              else:
                                    print("*click*")
                                    sleep(1)
                                    print("It was a blank...")
+                                   sleep(1.5)
                              gunHolder = "dealer"
          elif gunHolder == "dealer":
-              """
-              liveRange = [1,dealerMemory.count("x")]
-              blankRange = [dealerMemory.count("x")+1,len(dealerMemory)]
 
-              memorySize = len(dealerMemory)
-              """
+              if first2 == False:
+                   first2 = True
+                   RenderRoom(gunHolder,NotImplemented,"My Turn")
+                   sleep(2)
 
-              RenderRoom(gunHolder,NotImplemented,"My Turn")
+              instruction = "*the dealer is thinking*"
 
-              sleep(3.5)
+              RenderRoom(gunHolder,NotImplemented,"")
+
+              instruction = ""
+
+              sleep(2.5)
+
+              #Creates ranges of what choice will be the outcome of a randInt(),
+              #If within the liverange, choose to shoot the player, if within blankrange choose to shoot yourself (dealer)
+              #This serves so that the dealer knows what rounds are left but doesn't know the order and chooses based on chance
+              #Similar to how the player has to play.
 
               liveRange = [1,roundsList.count("x")]
               blankRange = [roundsList.count("x")+1,len(roundsList)]
@@ -289,8 +366,8 @@ while dealerLife > 0 and playerLife > 0:
                
               activatedRound = roundsList[0]
               roundsList.pop(0)
-              #dealerMemory.pop(0)
 
+               #Same as player shooting logic, resets currentMatch depending on if player has lost life
 
               if target == "player":
                     RenderRoom(gunHolder,"Other","The dealer aims the gun at you...")
@@ -303,17 +380,18 @@ while dealerLife > 0 and playerLife > 0:
                          playerLife -= 1
                          sleep(1)
                          print("You lose a life")
+                         sleep(1.5)
                          currentMatch = False
                     else:
                          print("*click*")
                          sleep(1)
                          print("It was a blank...")
+                         sleep(1.5)
                     gunHolder = "player"
 
               elif target == "dealer":
                     RenderRoom(gunHolder,"Self","The dealer aims the gun at themselves...")
                     
-                    #print("\nThe dealer aims the gun at themselves...")
                     sleep(3)
 
                     if activatedRound == "x":
@@ -321,16 +399,30 @@ while dealerLife > 0 and playerLife > 0:
                          dealerLife -= 1
                          sleep(1)
                          print("The Dealer loses a life")
+                         sleep(1.5)
                          currentMatch = False
                     else:
                          print("*click*")
                          sleep(1)
                          print("It was a blank...")
-    RenderRoom(gunHolder,NotImplemented,"Lets run that back again...")
+                         sleep(1.5)
+    if playerLife > 0 and dealerLife > 0:
+         RenderRoom(gunHolder,NotImplemented,"Lets run that back again...")
+    else:
+         winner = NotImplemented
+
+         if playerLife == 0:
+              winner = "dealer"
+         else:
+              winner = "player"
+
+              instruction = "The game has finished, to play again restart program"
+
+         RenderRoom(winner,"Other",f"The {winner} Wins!!!!")
+         
+    
     sleep(3)
  
-                   
-print("Game Over")
               
               
                              
