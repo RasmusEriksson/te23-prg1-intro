@@ -339,7 +339,7 @@ while dealerLife > 0 and playerLife > 0:
 
               sleep(2.5)
 
-              #Creates ranges of what choice will be the outcome of a randInt(),
+              #Creates ranges of what choice will be the outcome of a randInt() (index 0 will be the lowest number and index 1 will be the highest number in that range),
               #If within the liverange, choose to shoot the player, if within blankrange choose to shoot yourself (dealer)
               #This serves so that the dealer knows what rounds are left but doesn't know the order and chooses based on chance
               #Similar to how the player has to play.
