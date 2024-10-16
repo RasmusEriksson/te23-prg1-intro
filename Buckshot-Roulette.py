@@ -30,9 +30,6 @@ dealerLife = 3
 
 
 
-
-
-
 instruction = ""
 
 currentMatch = False
@@ -78,6 +75,8 @@ def RenderRoom(gh,aim,message):
                dealerAim =   "  ___"
                dealerHandle = "/.   "
      print("\n")
+     print("\n")
+     print("\n")
      print(f"You: {playerLife}    Dealer: {dealerLife}")
      print(f"-----------------------------------")
      print(f"\n{message}")
@@ -116,9 +115,8 @@ def RenderShells(roundsL,roundsB,Message):
           else:
                visualShellsList.append(shellSegmentBlank)
                
-
-
-
+     print("\n")
+     print("\n")
      print("\n")
      print(f"You: {playerLife}    Dealer: {dealerLife}")
      print(f"-----------------------------------")
@@ -133,8 +131,6 @@ def RenderShells(roundsL,roundsB,Message):
      print(f"{instruction}")
      print(f"")
 
-     
-#shuffledRounds = []
 
 liveRoundQouta = 1
 blankRoundQouta = 2
@@ -142,15 +138,17 @@ blankRoundQouta = 2
 
 gunHolder = "player"
 
-#RenderRoom(gunHolder,NotImplemented,"")
-
 actionChosen = 0
-actionList = ["Shoot Dealer","Shoot Yourself","PlaceHolderAction"]
+actionList = ["Shoot Dealer","Shoot Yourself","PlaceHolder"]
 
-dealerMemory = []
+input("input enter to begin the game...")
 
 RenderRoom(NotImplemented,NotImplemented,"Lets play a little game...")
-sleep(3)
+sleep(4)
+RenderRoom(NotImplemented,NotImplemented,"Live and blank rounds will be inserted into the gun at random")
+sleep(5)
+RenderRoom(NotImplemented,NotImplemented,"Shooting the other player will switch who's turn it is, regardless of outcome")
+sleep(6)
 
 
 while dealerLife > 0 and playerLife > 0:
@@ -199,7 +197,7 @@ while dealerLife > 0 and playerLife > 0:
     #Shows all of the shells with the render shell function with the instruction "*remember these*"
 
     RenderShells(liveCount,blankCount,statement)
-    sleep(5)
+    sleep(6)
 
     instruction = ""
 
@@ -236,18 +234,16 @@ while dealerLife > 0 and playerLife > 0:
 
               for action in actionList:
                    if actionList.index(action) == actionChosen:
-                         ShowCaseList.append(f"[{action}]")
+                         ShowCaseList.append(f"[ {action} ]")
                    else:
                          ShowCaseList.append(action)
 
-              print(ShowCaseList)
-              print(*ShowCaseList ,sep="   ")
 
               #Creates a nicer looking string that can be printed in the renderroom function
 
               statement = "  ".join(ShowCaseList)
 
-              instruction = "use [A] and [D] to switch options, hit [ENTER] to choose"
+              instruction = "input [A] or [D] at the bottom to switch options, input [ENTER] to choose"
 
               RenderRoom(gunHolder,NotImplemented,statement)
 
@@ -286,7 +282,7 @@ while dealerLife > 0 and playerLife > 0:
                          roundsList.pop(0)
 
                          #Checks who is the target when it's your turn and does the appropriet logic,
-                         #resets the current match if a player has lost a life
+                         #resets the current match if the player or dealer has lost a life
 
                          if target == "player":
                              RenderRoom(gunHolder,"Self","You hold the gun to your chin...")
