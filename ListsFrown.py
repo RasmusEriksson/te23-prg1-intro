@@ -4,7 +4,7 @@
 Items = ["Potion","Sword","Deathspell"]
 
 while True:
-    choice = input("Whatcha wanna doo, write the corresponding number for your option \n[1] see items\n[2] add new item to inventory \n[3] Remove item from inventory")
+    choice = input("Whatcha wanna doo, write the corresponding number for your option \n[1] see items\n[2] add new item to inventory \n[3] Remove item from inventory\n")
 
     if choice == "1":
 
@@ -28,7 +28,7 @@ while True:
 
             print("\n")
             print(" ".join(Items))
-            print("input [none] if you don't wanna remove anything")
+            print("\ninput [none] if you don't wanna remove anything")
             itemRemove = input("What item would you like to remove from this list? ")
 
             if itemRemove in Items:
